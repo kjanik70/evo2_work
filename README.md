@@ -47,7 +47,7 @@ sudo docker run -it --rm   --gpus all   --ipc=host --ulimit memlock=-1 --ulimit 
 5. Inside the container, set up Jupyter and required packages:
 ```bash
 # Install required packages
-pip install jupyter notebook ipykernel biopython scikit-learn statsmodels seaborn
+pip install jupyter notebook ipykernel biopython scikit-learn statsmodels seaborn py3Dmol
 
 # Register the kernel
 python -m ipykernel install --user --name=pytorch-gpu --display-name "Python (PyTorch GPU)"
