@@ -38,6 +38,12 @@ docker run --gpus all -it --rm \
   nvcr.io/nvidia/pytorch:25.09-py3
 ```
 
+Alternatively, enter the container with your API key passed through the environment:
+
+```bash
+sudo docker run -it --rm   --gpus all   --ipc=host --ulimit memlock=-1 --ulimit stack=67108864   -v $PWD:/workspace -w /workspace -e NGC_API_KEY=$NGC_API_KEY  --runtime=nvidia nvcr.io/nvidia/pytorch:25.09-py3
+```
+
 5. Inside the container, set up Jupyter and required packages:
 ```bash
 # Install required packages
