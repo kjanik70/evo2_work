@@ -105,7 +105,19 @@ exit
 
 ## Dependencies
 
-See `requirements.txt` for a full list of Python packages.
+See `requirements.txt` for a base list of Python packages used by the notebooks.
+
+Additional packages are required for the ESM protein-folding scripts:
+
+- requests
+- py3Dmol
+
+Install everything with:
+
+```bash
+pip install -r requirements.txt
+pip install requests py3Dmol
+```
 
 ## EVO2 Genome Prediction Notebook
 
@@ -142,3 +154,59 @@ export NIM_EVO2_TIMEOUT_S=600
 ```
 
 If you are using the public NVIDIA endpoint, you may not be able to change this limit. In that case, reduce your input size or chunk size in the notebook to avoid timeouts.
+
+---
+
+## ESMFold Protein Structure Prediction (Python scripts)
+
+Two scripts are included to call NVIDIA's ESMFold API and visualize the predicted 3D protein structure:
+
+- `esmhtml.py`: command-line script that saves an interactive 3D viewer to `protein.html`.
+- `esmfold.py`: notebook-friendly version that renders the viewer inline; can also be adapted to save HTML.
+
+These scripts call the NVIDIA Health API endpoint for ESMFold and require an API key.
+
+### Prerequisites
+
+1. Install dependencies:
+  - See Dependencies section above.
+2. Set your NVIDIA API key in the environment as `NGC_API_KEY`:
+
+```bash
+export NGC_API_KEY="<your_api_key>"
+```
+
+Tip: add the export line to your shell profile (e.g., `~/.bashrc`) to persist it.
+
+### Quickstart: Generate an HTML viewer
+
+Run the HTML-generating script and open the result in a browser:
+
+```bash
+python esmhtml.py
+xdg-open protein.html
+```
+
+The script will:
+- Send the provided amino-acid sequence to the ESMFold API
+- Receive a PDB string
+- Render an interactive 3D model to `protein.html` using py3Dmol
+
+To use your own sequence, edit the `payload["sequence"]` value in `esmhtml.py`.
+
+### Using inside Jupyter (inline rendering)
+
+If you prefer to work in a notebook, use `esmfold.py` or copy its core into a notebook cell. In Jupyter, `py3Dmol.view(...).show()` displays the viewer inline. To save HTML instead, replace the final lines with:
+
+```python
+output_filename = "protein.html"
+view.write_html(output_filename)
+print(f"Saved HTML viewer to {output_filename}")
+```
+
+### Troubleshooting
+
+- Missing API key: set `NGC_API_KEY` as shown above; otherwise the scripts exit with an error.
+- 401/403 errors: verify your key and that it has access to the NVIDIA Health API.
+- Module not found (py3Dmol/requests): ensure the extra dependencies are installed.
+- Blank viewer: ensure the machine has internet access to load the 3Dmol.js CDN from the generated HTML.
