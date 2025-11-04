@@ -7,3 +7,5 @@ biopython
 scikit-learn
 jupyter
 statsmodels
+requests
+py3Dmol
